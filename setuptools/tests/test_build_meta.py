@@ -9,11 +9,14 @@ from concurrent import futures
 import re
 from zipfile import ZipFile
 from pathlib import Path
+import warnings
+
 
 import pytest
 from jaraco import path
 
 from .textwrap import DALS
+from setuptools.warnings import SetuptoolsDeprecationWarning
 
 SETUP_SCRIPT_STUB = "__import__('setuptools').setup()"
 
@@ -77,7 +80,7 @@ class BuildBackendCaller(BuildBackendBase):
 
         (self.backend_name, _,
          self.backend_obj) = self.backend_name.partition(':')
-
+        
     def __call__(self, name, *args, **kw):
         """Handles arbitrary function invocations on the build backend."""
         os.chdir(self.cwd)
@@ -88,6 +91,9 @@ class BuildBackendCaller(BuildBackendBase):
             backend = getattr(mod, self.backend_obj)
         else:
             backend = mod
+
+        # SetuptoolsDeprecationWarning.emit throws an error since 2023
+        setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: warnings.warn("", SetuptoolsDeprecationWarning))
 
         return getattr(backend, name)(*args, **kw)
 
