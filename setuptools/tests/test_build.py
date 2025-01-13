@@ -3,6 +3,7 @@ from setuptools import Command, SetuptoolsDeprecationWarning
 from setuptools.dist import Distribution
 from setuptools.command.build import build
 from distutils.command.build import build as distutils_build
+import warnings
 
 import pytest
 
@@ -57,6 +58,8 @@ def test_subcommand_in_distutils(tmpdir_cwd):
     distutils_build.sub_commands.append(('subcommand', None))
 
     warning_msg = "please use .setuptools.command.build."
+    # SetuptoolsDeprecationWarning.emit throws an error since 2023
+    setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: warnings.warn(warning_msg, SetuptoolsDeprecationWarning))
     with pytest.warns(SetuptoolsDeprecationWarning, match=warning_msg):
         # For backward compatibility, the subcommand should run anyway:
         with pytest.raises(NotImplementedError, match="the command runs"):

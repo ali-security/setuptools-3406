@@ -10,6 +10,7 @@ from inspect import cleandoc
 from pathlib import Path
 from unittest.mock import Mock
 from zipfile import ZipFile
+import warnings
 
 import pytest
 from ini2toml.api import Translator
@@ -305,6 +306,8 @@ class TestDeprecatedFields:
         namespace-packages = ["myproj.pkg"]
         """
         pyproject.write_text(cleandoc(config), encoding="utf-8")
+        # SetuptoolsDeprecationWarning.emit throws an error since 2023
+        setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: warnings.warn("namespace_packages", SetuptoolsDeprecationWarning))
         with pytest.warns(SetuptoolsDeprecationWarning, match="namespace_packages"):
             pyprojecttoml.apply_configuration(makedist(tmp_path), pyproject)
 

@@ -2,6 +2,7 @@
 """
 import sys
 from unittest import mock
+import warnings
 
 import pytest
 
@@ -21,6 +22,8 @@ def test_bdist_rpm_warning(distutils_cmd, tmpdir_cwd):
         )
     )
     dist.parse_command_line()
+    # SetuptoolsDeprecationWarning.emit throws an error since 2023
+    setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: warnings.warn("", SetuptoolsDeprecationWarning))
     with pytest.warns(SetuptoolsDeprecationWarning):
         dist.run_commands()
 

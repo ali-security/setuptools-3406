@@ -2,6 +2,7 @@
 Helpers for normalization as expected in wheel/sdist/module file names
 and core metadata
 """
+
 import re
 from pathlib import Path
 from typing import Union
@@ -69,6 +70,8 @@ def best_effort_version(version: str) -> str:
 
     >>> import warnings
     >>> warnings.simplefilter("ignore", category=SetuptoolsDeprecationWarning)
+    >>> # SetuptoolsDeprecationWarning.emit throws an error since 2023
+    >>> setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: None)
     >>> best_effort_version("ubuntu lts")
     'ubuntu.lts'
     """

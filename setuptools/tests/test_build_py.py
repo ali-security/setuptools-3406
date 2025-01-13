@@ -3,6 +3,7 @@ import stat
 import shutil
 from pathlib import Path
 from unittest.mock import Mock
+import warnings
 
 import pytest
 import jaraco.path
@@ -149,6 +150,11 @@ def test_excluded_subpackages(tmpdir_cwd):
 
     build_py = dist.get_command_obj("build_py")
     msg = r"Python recognizes 'mypkg\.tests' as an importable package"
+    # SetuptoolsDeprecationWarning.emit throws an error since 2023
+    setattr(SetuptoolsDeprecationWarning, "emit", 
+            lambda *args, **kwargs: warnings.warn(
+                "Python recognizes 'mypkg.tests' as an importable package", 
+                SetuptoolsDeprecationWarning))
     with pytest.warns(SetuptoolsDeprecationWarning, match=msg):
         # TODO: To fix #3260 we need some transition period to deprecate the
         # existing behavior of `include_package_data`. After the transition, we

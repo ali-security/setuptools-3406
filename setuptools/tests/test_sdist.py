@@ -7,6 +7,7 @@ import unicodedata
 import contextlib
 import io
 from unittest import mock
+import warnings
 
 import pytest
 
@@ -191,6 +192,8 @@ class TestSdistTest:
         assert cmd.distribution.get_command_class('build_py') == CustomBuildPy
 
         msg = "setuptools instead of distutils"
+        # SetuptoolsDeprecationWarning.emit throws an error since 2023
+        setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: warnings.warn(msg, SetuptoolsDeprecationWarning))
         with quiet(), pytest.warns(SetuptoolsDeprecationWarning, match=msg):
             cmd.run()
 
