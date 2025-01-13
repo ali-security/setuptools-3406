@@ -413,7 +413,9 @@ class TestMetadata:
         )
 
         # SetuptoolsDeprecationWarning.emit throws an error since 2023
-        setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: warnings.warn("requires", SetuptoolsDeprecationWarning))
+        setattr(SetuptoolsDeprecationWarning, "emit", 
+                lambda *args, **kwargs: warnings.warn(
+                    "requires", SetuptoolsDeprecationWarning))
         with pytest.warns(SetuptoolsDeprecationWarning, match="requires"):
             with get_dist(tmpdir) as dist:
                 metadata = dist.metadata
@@ -473,7 +475,9 @@ class TestMetadata:
         )
         msg = "Usage of dash-separated 'author-email' will not be supported"
         # SetuptoolsDeprecationWarning.emit throws an error since 2023
-        setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: warnings.warn(msg, SetuptoolsDeprecationWarning))
+        setattr(SetuptoolsDeprecationWarning, "emit", 
+                lambda *args, **kwargs: warnings.warn(
+                    msg, SetuptoolsDeprecationWarning))
         with pytest.warns(SetuptoolsDeprecationWarning, match=msg):
             with get_dist(tmpdir) as dist:
                 metadata = dist.metadata
@@ -489,7 +493,9 @@ class TestMetadata:
         )
         msg = "Usage of uppercase key 'Name' in 'metadata' will not be supported"
         # SetuptoolsDeprecationWarning.emit throws an error since 2023
-        setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: warnings.warn(msg, SetuptoolsDeprecationWarning))
+        setattr(SetuptoolsDeprecationWarning, "emit", 
+                lambda *args, **kwargs: warnings.warn(
+                    msg, SetuptoolsDeprecationWarning))
         with pytest.warns(SetuptoolsDeprecationWarning, match=msg):
             with get_dist(tmpdir) as dist:
                 metadata = dist.metadata
@@ -520,7 +526,9 @@ class TestOptions:
             'py_modules = module1, module2\n',
         )
         # SetuptoolsDeprecationWarning.emit throws an error since 2023
-        setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: warnings.warn("namespace_packages", SetuptoolsDeprecationWarning))
+        setattr(SetuptoolsDeprecationWarning, "emit", 
+                lambda *args, **kwargs: warnings.warn(
+                    "namespace_packages", SetuptoolsDeprecationWarning))
         deprec = pytest.warns(SetuptoolsDeprecationWarning, match="namespace_packages")
         with deprec, get_dist(tmpdir) as dist:
             assert dist.zip_safe
@@ -577,7 +585,9 @@ class TestOptions:
             '  http://some.com/there/2\n',
         )
         # SetuptoolsDeprecationWarning.emit throws an error since 2023
-        setattr(SetuptoolsDeprecationWarning, "emit", lambda *args, **kwargs: warnings.warn("namespace_packages", SetuptoolsDeprecationWarning))
+        setattr(SetuptoolsDeprecationWarning, "emit", 
+                lambda *args, **kwargs: warnings.warn(
+                    "namespace_packages", SetuptoolsDeprecationWarning))
         deprec = pytest.warns(SetuptoolsDeprecationWarning, match="namespace_packages")
         with deprec, get_dist(tmpdir) as dist:
             assert dist.package_dir == {'': 'src', 'b': 'c'}
@@ -761,7 +771,8 @@ class TestOptions:
         # SetuptoolsDeprecationWarning.emit throws an error since 2023
         setattr(SetuptoolsDeprecationWarning, "emit", 
                 lambda *args, **kwargs: warnings.warn(
-                    "One of the parsed requirements in `install_requires` looks like a valid environment marker", 
+                    "One of the parsed requirements in `install_requires`"
+                    " looks like a valid environment marker", 
                     SetuptoolsDeprecationWarning))
         with pytest.warns(SetuptoolsDeprecationWarning, match=match):
             with get_dist(tmpdir) as _:
