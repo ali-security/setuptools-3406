@@ -1,6 +1,7 @@
 import inspect
 import logging
 import os
+import platform
 
 import pytest
 
@@ -38,6 +39,8 @@ def test_verbosity_level(tmp_path, monkeypatch, flag, expected_level):
     assert log_level_name == expected_level
 
 
+@pytest.mark.skipif(platform.python_implementation() == "PyPy", 
+                    reason="Test not work on PyPy")
 def test_patching_does_not_cause_problems():
     # Ensure `dist.log` is only patched if necessary
 
